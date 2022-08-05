@@ -94,3 +94,7 @@ serve({
     return new Response('Hello world!');
   },
 });
+
+bot.api.setWebhook(
+  Deno.env.get('WEBHOOK_URL')! + '/' + Deno.env.get('BOT_TOKEN')!
+);

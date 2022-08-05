@@ -7,6 +7,15 @@ import axiod from 'https://deno.land/x/axiod@0.26.1/mod.ts';
 import { serve } from 'https://deno.land/x/sift@0.5.0/mod.ts';
 import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
 
+if (
+  !Deno.env.get('BOT_TOKEN') ||
+  !Deno.env.get('WEBHOOK_URL') ||
+  !Deno.env.get('MODE')
+) {
+  console.log('Environment variables not set, please see .env.example');
+  Deno.exit(1);
+}
+
 const bot = new Bot(Deno.env.get('BOT_TOKEN')!);
 const handleUpdate = webhookCallback(bot, 'std/http');
 
@@ -61,7 +70,7 @@ bot.inlineQuery(/.+/, async (ctx) => {
           ),
         },
       ],
-      { cache_time: 10 }, // one month in seconds
+      { cache_time: 10 },
     );
     // deno-lint-ignore no-unused-vars
   } catch (e) {
@@ -76,7 +85,7 @@ bot.inlineQuery(/.+/, async (ctx) => {
           },
         },
       ],
-      { cache_time: 10 }, // one month in seconds
+      { cache_time: 10 },
     );
   }
 });
@@ -97,6 +106,8 @@ serve({
   },
 });
 
-bot.api.setWebhook(
-  Deno.env.get('WEBHOOK_URL')! + '/' + Deno.env.get('BOT_TOKEN')!,
-);
+Deno.env.get('MODE') === 'development' && bot.start();
+Deno.env.get('MODE') === 'production' &&
+  bot.api.setWebhook(
+    Deno.env.get('WEBHOOK_URL')! + '/' + Deno.env.get('BOT_TOKEN')!,
+  );

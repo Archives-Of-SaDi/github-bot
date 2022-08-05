@@ -2,19 +2,19 @@ import {
   Bot,
   InlineKeyboard,
   webhookCallback,
-} from "https://deno.land/x/grammy@v1.10.1/mod.ts";
-import axiod from "https://deno.land/x/axiod@0.26.1/mod.ts";
-import { serve } from "https://deno.land/x/sift@0.5.0/mod.ts";
-import "https://deno.land/x/dotenv@v3.2.0/load.ts";
+} from 'https://deno.land/x/grammy@v1.10.1/mod.ts';
+import axiod from 'https://deno.land/x/axiod@0.26.1/mod.ts';
+import { serve } from 'https://deno.land/x/sift@0.5.0/mod.ts';
+import 'https://deno.land/x/dotenv@v3.2.0/load.ts';
 
-const bot = new Bot(Deno.env.get("BOT_TOKEN")!);
-const handleUpdate = webhookCallback(bot, "std/http");
+const bot = new Bot(Deno.env.get('BOT_TOKEN')!);
+const handleUpdate = webhookCallback(bot, 'std/http');
 
 bot.on(
-  "message",
+  'message',
   (ctx) =>
     ctx.reply(`Just type\n<code>@${bot.botInfo.username} username</code>`, {
-      parse_mode: "HTML",
+      parse_mode: 'HTML',
     }),
 );
 
@@ -27,7 +27,7 @@ bot.inlineQuery(/.+/, async (ctx) => {
     await ctx.answerInlineQuery(
       [
         {
-          type: "photo",
+          type: 'photo',
           id: data.id,
           photo_url: data.avatar_url,
           thumb_url: data.avatar_url,
@@ -39,7 +39,7 @@ bot.inlineQuery(/.+/, async (ctx) => {
             `\n` +
             `Username: ${data.login}` +
             `\n` +
-            `Bio: ${data.bio || "Not Given"}` +
+            `Bio: ${data.bio || 'Not Given'}` +
             `\n` +
             `Public Repos: ${data.public_repos}` +
             `\n` +
@@ -49,14 +49,14 @@ bot.inlineQuery(/.+/, async (ctx) => {
             `\n` +
             `Location: ${data.location}` +
             `\n` +
-            `Company: ${data.company || "Not Given"}` +
+            `Company: ${data.company || 'Not Given'}` +
             `\n` +
-            `Blog: ${data.blog || "Not Given"}` +
+            `Blog: ${data.blog || 'Not Given'}` +
             `\n` +
-            `Email: ${data.email || "Not Given"}` +
+            `Email: ${data.email || 'Not Given'}` +
             `\n`,
           reply_markup: new InlineKeyboard().url(
-            "View on GitHub",
+            'View on GitHub',
             data.html_url,
           ),
         },
@@ -68,11 +68,11 @@ bot.inlineQuery(/.+/, async (ctx) => {
     await ctx.answerInlineQuery(
       [
         {
-          type: "article",
-          id: "1",
-          title: "User not found",
+          type: 'article',
+          id: '1',
+          title: 'User not found',
           input_message_content: {
-            message_text: "User not found",
+            message_text: 'User not found',
           },
         },
       ],
@@ -82,8 +82,8 @@ bot.inlineQuery(/.+/, async (ctx) => {
 });
 
 serve({
-  ["/" + Deno.env.get("BOT_TOKEN")]: async (req) => {
-    if (req.method == "POST") {
+  ['/' + Deno.env.get('BOT_TOKEN')]: async (req) => {
+    if (req.method == 'POST') {
       try {
         return await handleUpdate(req);
       } catch (err) {
@@ -92,11 +92,11 @@ serve({
     }
     return new Response();
   },
-  "/": () => {
-    return new Response("Hello world!");
+  '/': () => {
+    return new Response('Hello world!');
   },
 });
 
 bot.api.setWebhook(
-  Deno.env.get("WEBHOOK_URL")! + "/" + Deno.env.get("BOT_TOKEN")!,
+  Deno.env.get('WEBHOOK_URL')! + '/' + Deno.env.get('BOT_TOKEN')!,
 );

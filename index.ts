@@ -22,7 +22,7 @@ const handleUpdate = webhookCallback(bot, 'std/http');
 bot.on(
   'message',
   (ctx) =>
-    ctx.reply(`Type type\n<code>@${bot.botInfo.username} username</code>`, {
+    ctx.reply(`Just type\n<code>@${bot.botInfo.username} username</code>`, {
       parse_mode: 'HTML',
     }),
 );
